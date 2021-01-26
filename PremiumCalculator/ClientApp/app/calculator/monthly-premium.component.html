@@ -1,0 +1,85 @@
+<div class="container w-50 p-3">
+    <div class="form-group row">
+        <div>
+            <b>Monthly Premium Amount Calculator</b>
+            <hr>
+            <div class="col" *ngIf="premiumAmount > 0">
+                <b>
+                    Calculated Premium
+                    {{premiumAmount |currency:'AUD':'symbol'}}
+                </b>
+            </div>
+
+            <form [formGroup]="premiumCalculatorForm" (ngSubmit)="onSubmit()">
+
+                <div class="form-group row">
+                    <label for="description" class="col-sm-5 col-form-label">
+                        Name
+                    </label>
+                    <div class="col-sm-7">
+                        <input type="text" formControlName="fullName" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-sm-5 col-form-label">
+                        Date of Birth
+                    </label>
+                    <div class="col-sm-7">
+                        <input type="date" formControlName="dob" class="form-control"
+                               min="1900-01-01" max="2021-12-31"
+                               (blur)="onDateOfBirthChange($event.target.valueAsDate)"
+                               [ngClass]="{ 'is-invalid': submitted && f.dob.errors }" />
+                        <div *ngIf="submitted && f.dob.errors" class="invalid-feedback">
+                            <div *ngIf="f.dob.errors.required">Date of birth is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-sm-5 col-form-label">
+                        Age
+                    </label>
+                    <div class="col-sm-7">
+                        <input type="number" formControlName="age" class="form-control" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-sm-5 col-form-label">
+                        Occupation
+                    </label>
+                    <div class="col-sm-7">
+                        <select formControlName="occupation" class="form-control" (change)="calculatePremium()"
+                                [ngClass]="{ 'is-invalid': submitted && f.occupation.errors }">
+                            <option [ngValue]="null" disabled>Select Occupation</option>
+                            <option *ngFor="let occupation of occupationRatingFactorList" [value]="occupation.factor">
+                                {{occupation.name}}
+                            </option>
+                        </select>
+                        <div *ngIf="submitted && f.occupation.errors" class="invalid-feedback">
+                            <div *ngIf="f.occupation.errors.required">Occupation is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-sm-5 col-form-label">
+                        Sum Insured
+                    </label>
+                    <div class="col-sm-7">
+                        <input type="number" formControlName="sumInsured" class="form-control"
+                               [ngClass]="{ 'is-invalid': submitted && f.sumInsured.errors }" />
+                        <div *ngIf="submitted && f.sumInsured.errors" class="invalid-feedback">
+                            <div *ngIf="f.sumInsured.errors.required">Sum Insured is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-5"></div>
+                    <div class="col-sm-7">
+                        <button class="btn btn-success btn-md">
+                            Calculate Premium
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
